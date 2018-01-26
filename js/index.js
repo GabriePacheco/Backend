@@ -49,7 +49,7 @@ function playVideoOnScroll(){
 }
 
 inicializarSlider();
-//playVideoOnScroll();
+playVideoOnScroll();
 
 $.get("server/caragarMenus.php", {menu: "Tipo"}, function (res){
   
@@ -68,12 +68,25 @@ $("#mostrarTodos").click(function() {
   filtro();
 
 });
-function filtro (){ 
-  $("#resultados").html("");
-  $.get('server/buscar.php', function(data) {
-    var casa = JSON.parse (data);
+$("#formulario").submit(function(event) {
+  event.preventDefault();
+  var rango=$("#rangoPrecio").data("ionRangeSlider");
+   filtro($("#selectCiudad").val(), $("#selectTipo").val(), rango.result.from , rango.result.to  );
 
+});
+function filtro (ciudad, tipo, rangoD, rangoH){ 
+  if (!ciudad){ciudad="no";}
+  if (!tipo){tipo="no";}
+  if (!rangoD){rangoD="no";}
+  if (!rangoH){rangoH="no";}
+  $("#resultados").html("");
+  $.get('server/buscar.php', {Ciudad: ciudad, Tipo:tipo, rangod: rangoD, rangoh:rangoH},function(data) {
+
+    var casa = JSON.parse (data);
+    console.log(casa.length)
     for (var i = 0 ; i < casa.length; i++){
+          console.log(i);
+
       $("#resultados").append(''+
         '<div class="col s12 ">'
            +'<div class="card horizontal">'
